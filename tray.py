@@ -8,8 +8,10 @@ from PIL import Image
 import pystray
 from pystray import MenuItem as item
 
+from config import get_asset_path
+
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-ICON_PNG = os.path.join(PROJECT_DIR, "icon.png")
+ICON_PNG = get_asset_path("icon.png")
 
 class TrayManager:
     def __init__(self, on_show_window: Callable, on_exit: Callable, on_check_now: Callable, on_toggle_pause: Callable, get_is_paused: Callable):

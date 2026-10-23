@@ -9,7 +9,7 @@ import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
 
-from config import config, PROJECT_DIR
+from config import config, PROJECT_DIR, get_asset_path
 from tracker import tracker
 from startup import is_startup_enabled, set_startup
 from notifier import notifier
@@ -18,7 +18,7 @@ from notifier import notifier
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-ICON_ICO = os.path.join(PROJECT_DIR, "icon.ico")
+ICON_ICO = get_asset_path("icon.ico")
 
 class AnimeTrackerApp(ctk.CTk):
     def __init__(self, start_minimized: bool = False):

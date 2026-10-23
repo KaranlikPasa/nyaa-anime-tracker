@@ -11,9 +11,11 @@ try:
 except ImportError:
     HAS_WINOTIFY = False
 
+from config import get_asset_path
+
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-ICON_PNG = os.path.join(PROJECT_DIR, "icon.png")
-ICON_ICO = os.path.join(PROJECT_DIR, "icon.ico")
+ICON_PNG = get_asset_path("icon.png")
+ICON_ICO = get_asset_path("icon.ico")
 
 class Notifier:
     def __init__(self, tray_icon=None):

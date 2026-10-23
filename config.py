@@ -2,14 +2,28 @@
 Config and State Management for Nyaa Anime Tracker
 """
 import os
+import sys
 import json
 import uuid
 from typing import List, Dict, Any, Optional
 
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, "frozen", False):
+    PROJECT_DIR = os.path.dirname(sys.executable)
+    BUNDLE_DIR = getattr(sys, "_MEIPASS", PROJECT_DIR)
+else:
+    PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+    BUNDLE_DIR = PROJECT_DIR
+
 DATA_DIR = os.path.join(PROJECT_DIR, "data")
 SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")
 HISTORY_FILE = os.path.join(DATA_DIR, "history.json")
+
+def get_asset_path(filename: str) -> str:
+    """Finds an asset file both in regular execution and inside a PyInstaller bundle."""
+    p1 = os.path.join(BUNDLE_DIR, filename)
+    if os.path.exists(p1):
+        return p1
+    return os.path.join(PROJECT_DIR, filename)
 
 DEFAULT_SETTINGS = {
     "check_interval": 60,               # seconds between checks

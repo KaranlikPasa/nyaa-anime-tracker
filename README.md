@@ -1,8 +1,24 @@
 # 🎬 Nyaa.si Anime Çeviri & Bölüm Takipçisi
 
+[![GitHub Release](https://img.shields.io/github/v/release/KaranlikPasa/nyaa-anime-tracker?style=for-the-badge&color=2563eb)](https://github.com/KaranlikPasa/nyaa-anime-tracker/releases/latest)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue?style=for-the-badge)](https://github.com/KaranlikPasa/nyaa-anime-tracker/releases/latest)
+
 Bu uygulama, **Türkçe Anime Çeviri (Fansub) Ekipleri** için özel olarak geliştirilmiş modern, hafif ve arka planda sessizce çalışan bir bildirim ve takip sistemidir.
 
 [Nyaa.si](https://nyaa.si/) sitesine takip ettiğiniz animeyle ilgili yeni bir İngilizce bölüm (SubsPlease, Erai-raws vb.) yüklendiği anda **Windows masaüstü bildirimi** gönderir ve tek tıkla bölüme ulaşmanızı sağlar.
+
+---
+
+## ⬇️ İndirme (Doğrudan Çalıştırılabilir .EXE)
+
+Terminal veya Python kurulumu ile uğraşmak istemeyenler için hazır Windows paketi:
+
+👉 **[📦 NyaaAnimeTakipcisi-v1.0.0-Windows.zip İndir (Son Sürüm)](https://github.com/KaranlikPasa/nyaa-anime-tracker/releases/latest)**
+
+> **Kullanım:** İndirdiğiniz `.zip` dosyasını bir klasöre çıkartın ve `NyaaAnimeTakipcisi.exe` dosyasına çift tıklayarak çalıştırın!
+> 
+> 💡 *Not: Windows SmartScreen mavi uyarı ekranı ("Windows kişisel bilgisayarınızı korudu") gösterirse:*
+> Sol taraftaki **"Ek bilgi"** bağlantısına tıklayıp **"Yine de çalıştır"** butonuna basmanız yeterlidir. (Açık kaynaklı ve bağımsız uygulamalarda Windows ilk açılışta bunu gösterir; virüs değildir, tek seferlik izin vermeniz yeterlidir).*
 
 ---
 
