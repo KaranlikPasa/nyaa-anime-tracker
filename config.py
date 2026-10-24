@@ -27,7 +27,8 @@ def get_asset_path(filename: str) -> str:
 
 DEFAULT_SETTINGS = {
     "check_interval": 60,               # seconds between checks
-    "english_only": True,               # category 1_2 (Anime - English-translated)
+    "category": "1_0",                  # 1_0: All Anime (Raw + English-translated + Other)
+    "english_only": False,              # legacy flag
     "start_with_windows": False,        # auto-start on Windows boot
     "close_to_tray": True,              # minimize to tray when closed
     "play_sound": True,                 # sound on toast notification
@@ -64,6 +65,9 @@ class ConfigManager:
                 with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self.settings = {**DEFAULT_SETTINGS, **data.get("settings", {})}
+                    # Migrate old settings
+                    if "category" not in data.get("settings", {}):
+                        self.settings["category"] = "1_0"
                     self.tracked_anime = data.get("tracked_anime", [])
             except Exception as e:
                 print(f"[Config] Error loading settings: {e}")
@@ -114,7 +118,7 @@ class ConfigManager:
 
     # --- Anime List Operations ---
 
-    def add_anime(self, name: str, resolution: str = "Tümü", group: str = "", exclude: str = "") -> Optional[Dict[str, Any]]:
+    def add_anime(self, name: str, resolution: str = "Tümü", group: str = "", exclude: str = "", category: str = "1_0") -> Optional[Dict[str, Any]]:
         name = name.strip()
         if not name:
             return None
@@ -130,7 +134,8 @@ class ConfigManager:
             "enabled": True,
             "resolution": resolution,
             "group": group.strip(),
-            "exclude": exclude.strip()
+            "exclude": exclude.strip(),
+            "category": category
         }
         self.tracked_anime.append(item)
         self.save_settings()

@@ -112,8 +112,8 @@ class AnimeTracker:
             return
 
         self._set_status("Nyaa kontrol ediliyor...")
-        english_only = config.get_setting("english_only", True)
-        feed_items = nyaa_client.fetch_feed(english_only=english_only)
+        category = config.get_setting("category", "1_0")
+        feed_items = nyaa_client.fetch_feed(category=category)
         
         self.total_checks += 1
         self.last_check_time = datetime.now()
@@ -194,8 +194,18 @@ class AnimeTracker:
         Actively queries Nyaa for this specific anime to discover recent releases immediately.
         """
         anime_name = anime_rule.get("name", "")
-        english_only = config.get_setting("english_only", True)
-        items = nyaa_client.fetch_feed(english_only=english_only, query=anime_name)
+        category = anime_rule.get("category") or config.get_setting("category", "1_0")
+        
+        # 1. Primary search with specified category
+        items = nyaa_client.fetch_feed(category=category, query=anime_name)
+
+        # 2. Smart fallback: if 0 items and category was restrictive, search all anime (1_0)
+        if not items and category not in ("1_0", "0_0"):
+            items = nyaa_client.fetch_feed(category="1_0", query=anime_name)
+
+        # 3. Last fallback: try all nyaa categories (0_0)
+        if not items and category != "0_0":
+            items = nyaa_client.fetch_feed(category="0_0", query=anime_name)
 
         matches = []
         for item in items:

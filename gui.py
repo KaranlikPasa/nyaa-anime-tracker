@@ -571,13 +571,24 @@ class AnimeTrackerApp(ctk.CTk):
         s2_title = ctk.CTkLabel(sec2, text="🌐 Nyaa Filtreleri ve Tarama Sıklığı", font=ctk.CTkFont(size=14, weight="bold"))
         s2_title.pack(anchor="w", padx=16, pady=(12, 6))
 
-        self.sw_english_only = ctk.CTkSwitch(
-            sec2,
-            text="Sadece İngilizce Çevirileri Takip Et (c=1_2 Anime - English-translated)",
-            font=ctk.CTkFont(size=13),
-            command=lambda: config.set_setting("english_only", bool(self.sw_english_only.get()))
+        cat_box = ctk.CTkFrame(sec2, fg_color="transparent")
+        cat_box.pack(anchor="w", padx=16, pady=6)
+
+        lbl_cat = ctk.CTkLabel(cat_box, text="Kategori Filtresi:", font=ctk.CTkFont(size=13, weight="bold"))
+        lbl_cat.pack(side="left", padx=(0, 10))
+
+        self.combo_category = ctk.CTkComboBox(
+            cat_box,
+            values=[
+                "🎬 Tüm Animeler (Raw + İngilizce Çeviri) [1_0]",
+                "🌐 Tüm Nyaa (Kategori Sınırı Yok) [0_0]",
+                "🇬🇧 Sadece İngilizce Çeviriler [1_2]",
+                "🇯🇵 Sadece Raw / Ham Videolar [1_4]"
+            ],
+            command=self._on_category_change,
+            width=360
         )
-        self.sw_english_only.pack(anchor="w", padx=16, pady=6)
+        self.combo_category.pack(side="left")
 
         interval_box = ctk.CTkFrame(sec2, fg_color="transparent")
         interval_box.pack(anchor="w", padx=16, pady=6)
@@ -665,11 +676,15 @@ class AnimeTrackerApp(ctk.CTk):
         else:
             self.sw_close_tray.deselect()
 
-        # English only
-        if config.get_setting("english_only", True):
-            self.sw_english_only.select()
-        else:
-            self.sw_english_only.deselect()
+        # Category
+        cat = config.get_setting("category", "1_0")
+        cat_map = {
+            "1_0": "🎬 Tüm Animeler (Raw + İngilizce Çeviri) [1_0]",
+            "0_0": "🌐 Tüm Nyaa (Kategori Sınırı Yok) [0_0]",
+            "1_2": "🇬🇧 Sadece İngilizce Çeviriler [1_2]",
+            "1_4": "🇯🇵 Sadece Raw / Ham Videolar [1_4]"
+        }
+        self.combo_category.set(cat_map.get(cat, "🎬 Tüm Animeler (Raw + İngilizce Çeviri) [1_0]"))
 
         # Play sound
         if config.get_setting("play_sound", True):
@@ -697,6 +712,19 @@ class AnimeTrackerApp(ctk.CTk):
         else:
             messagebox.showerror("Hata", "Windows başlangıç ayarı güncellenirken hata oluştu.")
             self.sync_settings_ui()
+
+    def _on_category_change(self, choice: str):
+        if "1_2" in choice:
+            code = "1_2"
+        elif "1_4" in choice:
+            code = "1_4"
+        elif "0_0" in choice:
+            code = "0_0"
+        else:
+            code = "1_0"
+        config.set_setting("category", code)
+        self.status_bar_lbl.configure(text=f"✅ Kategori filtresi güncellendi: {code}")
+        tracker.trigger_check_now()
 
     def _on_interval_change(self, choice: str):
         sec = 60
@@ -788,7 +816,10 @@ class AnimeTrackerApp(ctk.CTk):
                     messagebox.showinfo("Arama Sonucu", f"'{anime_name}' için son {len(matches)} bölüm bulundu ve Geçmiş sekmesine eklendi.")
                     self.tabview.set("🔔 Düşen Bölümler (Geçmiş)")
                 else:
-                    messagebox.showinfo("Arama Sonucu", f"'{anime_name}' için filtrelere uygun bölüm bulunamadı.")
+                    res = anime_rule.get("resolution", "Tümü")
+                    grp = anime_rule.get("group") or "Yok"
+                    exc = anime_rule.get("exclude") or "Yok"
+                    messagebox.showinfo("Arama Sonucu", f"'{anime_name}' için filtrelere uygun bölüm bulunamadı.\n\nAktif Filtreler:\n• Çözünürlük: {res}\n• Grup: {grp}\n• Hariç: {exc}\n\nİpucu: Ayarlar sekmesinden Kategori Filtresini 'Tüm Animeler (1_0)' olarak ayarlayabilirsiniz.")
                 self.status_bar_lbl.configure(text="Tarama tamamlandı.")
 
             self.after(0, _update_ui)

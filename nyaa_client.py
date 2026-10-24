@@ -1,10 +1,10 @@
 """
-Nyaa.si RSS Fetcher and Parser
+Nyaa.si RSS Fetcher and Parser using Requests
 """
-import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
 from typing import List, Dict, Any, Optional
+import requests
 
 NYAA_BASE_URL = "https://nyaa.si"
 NYAA_RSS_URL = f"{NYAA_BASE_URL}/?page=rss"
@@ -19,11 +19,12 @@ DEFAULT_TRACKERS = [
 ]
 
 class NyaaClient:
-    def __init__(self, user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"):
-        self.user_agent = user_agent
-        self.namespaces = {
-            "nyaa": "https://nyaa.si/xmlns/nyaa"
-        }
+    def __init__(self):
+        self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/rss+xml, application/xml, text/xml, */*"
+        })
 
     def build_magnet(self, info_hash: str, title: str) -> str:
         if not info_hash:
@@ -35,39 +36,33 @@ class NyaaClient:
             params.append(f"tr={urllib.parse.quote(tr)}")
         return "magnet:?" + "&".join(params)
 
-    def fetch_feed(self, english_only: bool = True, query: str = "") -> List[Dict[str, Any]]:
+    def fetch_feed(self, category: str = "1_0", query: str = "", english_only: Optional[bool] = None) -> List[Dict[str, Any]]:
         """
         Fetches the RSS feed from nyaa.si.
-        english_only: True uses category 1_2 (Anime - English-translated)
+        category: "1_0" (All Anime), "1_2" (Anime - English), "1_4" (Anime - Raw), "0_0" (All Categories)
         query: Optional search keyword
         """
-        params = {"page": "rss"}
-        
-        if english_only:
-            params["c"] = "1_2"  # Anime - English-translated
+        # Backward compatibility with boolean english_only
+        if english_only is not None:
+            cat = "1_2" if english_only else "1_0"
         else:
-            params["c"] = "1_0"  # All Anime
+            cat = category or "1_0"
+
+        params = {"page": "rss"}
+        if cat and cat != "all":
+            params["c"] = cat
             
         if query and query.strip():
             params["q"] = query.strip()
             
         url = f"{NYAA_BASE_URL}/?{urllib.parse.urlencode(params)}"
         
-        req = urllib.request.Request(
-            url,
-            headers={
-                "User-Agent": self.user_agent,
-                "Accept": "application/rss+xml, application/xml, text/xml, */*"
-            }
-        )
-        
         try:
-            with urllib.request.urlopen(req, timeout=15) as response:
-                if response.status != 200:
-                    print(f"[NyaaClient] HTTP {response.status} from {url}")
-                    return []
-                content = response.read()
-                return self._parse_rss(content)
+            resp = self.session.get(url, timeout=12)
+            if resp.status_code != 200:
+                print(f"[NyaaClient] HTTP {resp.status_code} from {url}")
+                return []
+            return self._parse_rss(resp.content)
         except Exception as e:
             print(f"[NyaaClient] Request error: {e}")
             return []
