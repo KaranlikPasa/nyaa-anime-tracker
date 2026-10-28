@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Nyaa Anime Takipçisi
+Name[tr]=Nyaa Anime Takipçisi
+Comment=Nyaa.si yeni bölüm otomatik takip ve bildirim sistemi
+Comment[tr]=Nyaa.si yeni bölüm otomatik takip ve bildirim sistemi
+Exec=/opt/nyaa-anime-tracker/nyaa-anime-tracker %u
+Icon=nyaa-anime-tracker
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;Utility;
+Keywords=anime;nyaa;tracker;torrent;bildirim;fansub;
+StartupNotify=true

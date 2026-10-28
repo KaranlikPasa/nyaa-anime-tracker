@@ -14,7 +14,11 @@ else:
     PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
     BUNDLE_DIR = PROJECT_DIR
 
-DATA_DIR = os.path.join(PROJECT_DIR, "data")
+if sys.platform != "win32" and not os.access(PROJECT_DIR, os.W_OK):
+    xdg_data = os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
+    DATA_DIR = os.path.join(xdg_data, "nyaa-anime-tracker")
+else:
+    DATA_DIR = os.path.join(PROJECT_DIR, "data")
 SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")
 HISTORY_FILE = os.path.join(DATA_DIR, "history.json")
 

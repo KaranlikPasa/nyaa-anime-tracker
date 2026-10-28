@@ -1,13 +1,18 @@
 """
-Windows Notification Manager with Winotify and Pystray Fallback
+Cross-Platform Notification Manager:
+- Windows: Winotify (Toast with action buttons)
+- Linux: notify-send (libnotify)
+- Fallback: Pystray system tray notification
 """
 import os
 import sys
+import shutil
+import subprocess
 import webbrowser
 
 try:
     from winotify import Notification, audio
-    HAS_WINOTIFY = True
+    HAS_WINOTIFY = (sys.platform == "win32")
 except ImportError:
     HAS_WINOTIFY = False
 
@@ -26,7 +31,7 @@ class Notifier:
 
     def notify_release(self, anime_name: str, release_title: str, guid: str, link: str, size: str = "", seeders: str = "", play_sound: bool = True):
         """
-        Sends a Windows toast notification for a newly detected release.
+        Sends a desktop notification for a newly detected release.
         """
         title = f"🎬 {anime_name} - Yeni Bölüm!"
         details = []
@@ -38,7 +43,7 @@ class Notifier:
         details_str = f" ({' | '.join(details)})" if details else ""
         msg = f"{release_title}{details_str}"
 
-        # Try winotify first
+        # 1. Windows: Try winotify
         if HAS_WINOTIFY:
             try:
                 toast = Notification(
@@ -54,12 +59,8 @@ class Notifier:
                 else:
                     toast.set_audio(audio.Silent, loop=False)
 
-                # Primary click on toast opens web page
                 if guid:
                     toast.launch = guid
-
-                # Action buttons
-                if guid:
                     toast.add_actions(label="🌐 Nyaa'da Aç", launch=guid)
                 if link:
                     toast.add_actions(label="📥 Torrent İndir", launch=link)
@@ -67,9 +68,21 @@ class Notifier:
                 toast.show()
                 return
             except Exception as e:
-                print(f"[Notifier] winotify failed: {e}, falling back to tray notification.")
+                print(f"[Notifier] winotify failed: {e}, falling back.")
 
-        # Fallback to tray balloon notification
+        # 2. Linux / Arch: Try notify-send
+        if sys.platform != "win32" and shutil.which("notify-send"):
+            try:
+                cmd = ["notify-send", "-a", "Nyaa Anime Tracker", "-u", "normal"]
+                if os.path.exists(ICON_PNG):
+                    cmd.extend(["-i", ICON_PNG])
+                cmd.extend([title, msg])
+                subprocess.Popen(cmd)
+                return
+            except Exception as e:
+                print(f"[Notifier] notify-send failed: {e}")
+
+        # 3. Fallback to tray balloon notification
         if self.tray_icon:
             try:
                 self.tray_icon.notify(msg, title)

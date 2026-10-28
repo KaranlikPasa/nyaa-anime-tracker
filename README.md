@@ -1,32 +1,58 @@
 # 🎬 Nyaa.si Anime Çeviri & Bölüm Takipçisi
 
+[![Arch Linux](https://img.shields.io/badge/Arch%20Linux-AUR%20%7C%20PKGBUILD-1793d1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://github.com/KaranlikPasa/nyaa-anime-tracker)
+[![Platform](https://img.shields.io/badge/Platform-Arch%20Linux%20%7C%20Windows-blue?style=for-the-badge)](https://github.com/KaranlikPasa/nyaa-anime-tracker)
 [![GitHub Release](https://img.shields.io/github/v/release/KaranlikPasa/nyaa-anime-tracker?style=for-the-badge&color=2563eb)](https://github.com/KaranlikPasa/nyaa-anime-tracker/releases/latest)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue?style=for-the-badge)](https://github.com/KaranlikPasa/nyaa-anime-tracker/releases/latest)
 
-Bu uygulama, **Türkçe Anime Çeviri (Fansub) Ekipleri** için özel olarak geliştirilmiş modern, hafif ve arka planda sessizce çalışan bir bildirim ve takip sistemidir.
+Bu uygulama, **Türkçe Anime Çeviri (Fansub) Ekipleri** için özel olarak geliştirilmiş modern, hafif ve arka planda sessizce çalışan bir bildirim ve takip sistemidir. **Arch Linux** ve **Windows** üzerinde tam uyumlu çalışır.
 
-[Nyaa.si](https://nyaa.si/) sitesine takip ettiğiniz animeyle ilgili yeni bir İngilizce bölüm (SubsPlease, Erai-raws vb.) yüklendiği anda **Windows masaüstü bildirimi** gönderir ve tek tıkla bölüme ulaşmanızı sağlar.
+[Nyaa.si](https://nyaa.si/) sitesine takip ettiğiniz animeyle ilgili yeni bir İngilizce bölüm (SubsPlease, Erai-raws vb.) yüklendiği anda **masaüstü bildirimi** gönderir ve tek tıkla bölüme ulaşmanızı sağlar.
 
 ---
 
-## ⬇️ İndirme (Doğrudan Çalıştırılabilir .EXE)
+## 📥 Kurulum
 
-Terminal veya Python kurulumu ile uğraşmak istemeyenler için hazır Windows paketi:
+### 🐧 1. Arch Linux Kurulumu
 
+#### Yöntem A: PKGBUILD ile Kurulum
+```bash
+git clone https://github.com/KaranlikPasa/nyaa-anime-tracker.git
+cd nyaa-anime-tracker
+makepkg -si
+```
+
+#### Yöntem B: Tek Komutla Kurulum Betiği (`install.sh`)
+```bash
+git clone https://github.com/KaranlikPasa/nyaa-anime-tracker.git
+cd nyaa-anime-tracker
+chmod +x install.sh
+sudo ./install.sh
+```
+
+Kurulum tamamlandıktan sonra uygulama menünüzden (Rofi, Wofi, GNOME, KDE) **Nyaa Anime Takipçisi**'ni başlatabilir veya terminalden doğrudan şu komutu verebilirsiniz:
+```bash
+nyaa-anime-tracker
+```
+
+---
+
+### 🪟 2. Windows Kurulumu (.EXE veya Kaynak Kod)
+
+#### Hazır .EXE İle:
 👉 **[📦 NyaaAnimeTakipcisi-v1.0.0-Windows.zip İndir (Son Sürüm)](https://github.com/KaranlikPasa/nyaa-anime-tracker/releases/latest)**
 
-> **Kullanım:** İndirdiğiniz `.zip` dosyasını bir klasöre çıkartın ve `NyaaAnimeTakipcisi.exe` dosyasına çift tıklayarak çalıştırın!
-> 
-> 💡 *Not: Windows SmartScreen mavi uyarı ekranı ("Windows kişisel bilgisayarınızı korudu") gösterirse:*
-> Sol taraftaki **"Ek bilgi"** bağlantısına tıklayıp **"Yine de çalıştır"** butonuna basmanız yeterlidir. (Açık kaynaklı ve bağımsız uygulamalarda Windows ilk açılışta bunu gösterir; virüs değildir, tek seferlik izin vermeniz yeterlidir).*
+#### Kaynak Koddan:
+- `Baslat.bat`: Çift tıklayarak başlatabilirsiniz.
+- `ArkaPlandaBaslat.vbs`: Konsol penceresi olmadan doğrudan sessizce başlatır.
 
 ---
 
 ## ✨ Özellikler
 
-1. **Anlık Masaüstü Bildirimleri (Windows Toast)**:
-   - Yeni bölüm yüklendiğinde ekranın sağ altında sesli bildirim çıkar.
-   - Bildirime tıkladığınızda veya *"Nyaa'da Aç"* / *"Torrent İndir"* butonlarına bastığınızda doğrudan ilgili sayfaya yönlendirir.
+1. **Anlık Masaüstü Bildirimleri**:
+   - **Linux:** `notify-send` (libnotify) ile masaüstü ortamınızla (GNOME, KDE, Dunst, Mako vb.) entegre native bildirimler.
+   - **Windows:** Sesli Windows 10/11 Toast bildirimleri.
+   - Bildirime tıkladığınızda doğrudan ilgili sayfaya yönlendirir.
 
 2. **Gelişmiş Arayüz (CustomTkinter)**:
    - Modern, göz yormayan karanlık tema (Dark Mode).
@@ -40,44 +66,23 @@ Terminal veya Python kurulumu ile uğraşmak istemeyenler için hazır Windows p
    - Tek tıkla torrent indirme, sayfayı açma veya **🧲 Magnet linkini panoya kopyalama** imkanı.
 
 4. **Arka Planda Çalışma (Sistem Tepsisi - Tray)**:
-   - Pencereyi kapattığınızda (`X`) program kapanmaz, sistem tepsisine (sağ alttaki saat yanına) küçülerek takip etmeye devam eder.
+   - Pencereyi kapattığınızda (`X`) program kapanmaz, sistem tepsisine küçülerek takip etmeye devam eder.
    - Tepsi ikonuna sağ tıklayarak anında durumu kontrol edebilir, duraklatabilir veya arayüzü tekrar açabilirsiniz.
 
-5. **Bilgisayar Başlarken Otomatik Başlama**:
-   - Ayarlar sekmesindeki *"Bilgisayar açıldığında otomatik başlasın"* seçeneğiyle Windows başlangıcına eklenir.
-   - Bilgisayar açıldığında hiçbir pencere açmadan doğrudan arka planda sessizce başlar.
+5. **Sistem Başlangıcında Otomatik Başlama**:
+   - **Linux:** `~/.config/autostart` üzerinden sistem açılışında arka planda başlar.
+   - **Windows:** Windows Başlangıç kayıt defteri üzerinden otomatik başlar.
 
 ---
 
-## 🚀 Başlatma Yöntemleri
+## 🛠️ Manuel Çalıştırma (Python)
 
-Klasör içinde hazır kısayollar bulunmaktadır:
-
-- **`Baslat.bat`**: Normal başlatıcı. Çift tıklayarak arayüzü doğrudan açabilirsiniz.
-- **`ArkaPlandaBaslat.vbs`**: Tamamen gizli modda başlatır (herhangi bir siyah konsol penceresi açılmaz, doğrudan sistem tepsisine yerleşir).
-- **`Baslat_Konsollu.bat`**: Hata ayıklama veya konsol çıktılarını görmek isterseniz.
-
----
-
-## 🛠️ Kurulum & Bağımlılıklar
-
-Gereksinimler Python ortamınızda zaten yüklü veya şu komutla kurulabilir:
 ```bash
 pip install -r requirements.txt
+python main.py
 ```
-
-Paketler:
-- `customtkinter` (Modern arayüz)
-- `winotify` (Windows yerel bildirim sistemi)
-- `pystray` (Sistem tepsisi - Tray entegrasyonu)
-- `pillow` (Görsel ve ikon işleme)
 
 ---
 
-## 📦 Tek Dosya (.exe) Haline Getirme (İsteğe Bağlı)
-
-Eğer uygulamanın Python kurulu olmayan diğer çevirmen arkadaşlarınızda da çalışmasını isterseniz:
-```bash
-python build_exe.py
-```
-komutunu çalıştırdığınızda `dist/NyaaAnimeTakipcisi.exe` adında tek parça çalıştırılabilir bir program oluşturur.
+## 📄 Lisans
+MIT License
